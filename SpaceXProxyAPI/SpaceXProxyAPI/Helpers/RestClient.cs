@@ -4,6 +4,9 @@
 
 namespace SpaceXProxyAPI.Helpers
 {
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+
     /// <summary>
     /// Rest Client class; An abstraction over HttpClient Methods. Currently it has only Get method for simplicity.
     /// </summary>
@@ -24,14 +27,36 @@ namespace SpaceXProxyAPI.Helpers
         }
 
         /// <summary>
-        /// Http Get Request.
+        /// Http Get Method.
         /// </summary>
+        /// <typeparam name="T">Generic Response Type.</typeparam>
         /// <param name="url">Url to request to.</param>
-        /// <param name="parameters">Query Params.</param>
+        /// <param name="parameters">Query params.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<HttpResponseMessage> Get(string url, Dictionary<string, string> parameters)
+        public async Task<T> Get<T>(string url, Dictionary<string, string>? parameters = null)
         {
-            return await this.httpClient.GetAsync(parameters == null ? url : $"{url}?{string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+            try
+            {
+                return await this.httpClient
+                    .GetFromJsonAsync<T>(parameters == null ? url : $"{url}?{string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+            }
+            catch (HttpRequestException)
+            {
+                // Non Success response.
+                Console.WriteLine("An error occurred.");
+            }
+            catch (NotSupportedException)
+            {
+                // Invalid Content type.
+                Console.WriteLine("The content type is not supported.");
+            }
+            catch (JsonException)
+            {
+                // Invalid JSON.
+                Console.WriteLine("Invalid JSON.");
+            }
+
+            return default(T);
         }
     }
 }
