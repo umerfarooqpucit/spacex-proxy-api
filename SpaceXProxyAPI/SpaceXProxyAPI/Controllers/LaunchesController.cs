@@ -32,9 +32,22 @@ namespace SpaceXProxyAPI.Controllers
         /// <returns>A  representing the result of the asynchronous operation.</returns>
         [HttpGet]
         [Route(nameof(GetAll))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LaunchMetadata>))]
         public async Task<List<LaunchMetadata>> GetAll()
         {
             return await this.launchService.GetAllLaunches();
+        }
+
+        /// <summary>
+        /// Get Launch by id.
+        /// </summary>
+        /// <param name="id">the Id of the Launch.</param>
+        /// <returns>LaunchMetadata.</returns>
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LaunchMetadata))]
+        public async Task<LaunchMetadata> GetLaunchById(int id)
+        {
+            return await this.launchService.GetLaunchById(id);
         }
     }
 }
