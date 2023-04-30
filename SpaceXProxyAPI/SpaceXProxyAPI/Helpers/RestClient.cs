@@ -5,7 +5,6 @@
 namespace SpaceXProxyAPI.Helpers
 {
     using System.Text.Json;
-    using System.Text.Json.Serialization;
 
     /// <summary>
     /// Rest Client class; An abstraction over HttpClient Methods. Currently it has only Get method for simplicity.

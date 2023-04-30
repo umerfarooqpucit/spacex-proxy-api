@@ -6,6 +6,7 @@ namespace SpaceXProxyAPI.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using SpaceXProxyAPI.Data.Models;
+    using SpaceXProxyAPI.Services;
 
     /// <summary>
     /// Implements launch api endpoints.
@@ -14,6 +15,17 @@ namespace SpaceXProxyAPI.Controllers
     [Route("api/[controller]")]
     public class LaunchesController : ControllerBase
     {
+        private readonly LaunchService launchService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LaunchesController"/> class.
+        /// </summary>
+        /// <param name="launchService">Launch Service.</param>
+        public LaunchesController(LaunchService launchService)
+        {
+            this.launchService = launchService;
+        }
+
         /// <summary>
         /// Gets all past and upcoming launches.
         /// </summary>
@@ -22,7 +34,7 @@ namespace SpaceXProxyAPI.Controllers
         [Route(nameof(GetAll))]
         public async Task<List<LaunchMetadata>> GetAll()
         {
-            return new List<LaunchMetadata>();
+            return await this.launchService.GetAllLaunches();
         }
     }
 }
