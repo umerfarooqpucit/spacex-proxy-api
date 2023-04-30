@@ -44,8 +44,8 @@ namespace SpaceXProxyAPI.Controllers
         /// <param name="id">the Id of the Launch.</param>
         /// <returns>LaunchMetadata.</returns>
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LaunchMetadata))]
-        public async Task<LaunchMetadata> GetLaunchById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LaunchDetail))]
+        public async Task<LaunchDetail> GetLaunchById(int id)
         {
             return await this.launchService.GetLaunchById(id);
         }

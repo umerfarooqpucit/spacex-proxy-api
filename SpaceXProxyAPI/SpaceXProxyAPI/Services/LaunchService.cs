@@ -4,8 +4,6 @@
 
 namespace SpaceXProxyAPI.Services
 {
-    using System;
-    using System.Text.Json;
     using SpaceXProxyAPI.Data.Models;
     using SpaceXProxyAPI.Helpers;
 
@@ -42,9 +40,9 @@ namespace SpaceXProxyAPI.Services
         /// </summary>
         /// <param name="id">the Id of the Launch.</param>
         /// <returns>launchMetadata.</returns>
-        public async Task<LaunchMetadata> GetLaunchById(int id)
+        public async Task<LaunchDetail> GetLaunchById(int id)
         {
-            return await this.restClient.Get<LaunchMetadata>($"{Data.Constants.Endpoint.AllLaunches}/{id}");
+            return await this.restClient.Get<LaunchDetail>($"{Data.Constants.Endpoint.AllLaunches}/{id}");
         }
     }
 }
