@@ -2,9 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.Text.Json;
+using SpaceXProxyAPI.Clients;
 using SpaceXProxyAPI.Helpers;
-using SpaceXProxyAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -16,7 +15,7 @@ var baseUrl = builder.Configuration.GetValue<string>("spacexInternalApiBaseUrl")
 
 // Add services to the container.
 services.AddSingleton(_ => new RestClient(baseUrl));
-services.AddScoped<LaunchService>();
+services.AddScoped<LaunchClient>();
 
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();

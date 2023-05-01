@@ -5,6 +5,7 @@
 namespace SpaceXProxyAPI.Helpers
 {
     using System.Text.Json;
+    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Rest Client class; An abstraction over HttpClient Methods. Currently it has only Get method for simplicity.
@@ -32,30 +33,34 @@ namespace SpaceXProxyAPI.Helpers
         /// <param name="url">Url to request to.</param>
         /// <param name="parameters">Query params.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<T> Get<T>(string url, Dictionary<string, string>? parameters = null)
+        public async Task<IActionResult> Get<T>(string url, Dictionary<string, string>? parameters = null)
         {
             try
             {
-                return await this.httpClient
+                var res = await this.httpClient
                     .GetFromJsonAsync<T>(parameters == null ? url : $"{url}?{string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
-            }
-            catch (HttpRequestException)
-            {
-                // Non Success response.
-                Console.WriteLine("An error occurred.");
-            }
-            catch (NotSupportedException)
-            {
-                // Invalid Content type.
-                Console.WriteLine("The content type is not supported.");
-            }
-            catch (JsonException)
-            {
-                // Invalid JSON.
-                Console.WriteLine("Invalid JSON.");
-            }
 
-            return default(T);
+                return new OkObjectResult(res);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundObjectResult(ex.Message);
+                }
+
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = (int?)ex.StatusCode,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError,
+                };
+            }
         }
     }
 }

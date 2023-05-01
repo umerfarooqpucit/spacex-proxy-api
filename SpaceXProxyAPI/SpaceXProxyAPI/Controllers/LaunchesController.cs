@@ -5,8 +5,8 @@
 namespace SpaceXProxyAPI.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using SpaceXProxyAPI.Clients;
     using SpaceXProxyAPI.Data.Models;
-    using SpaceXProxyAPI.Services;
 
     /// <summary>
     /// Implements launch api endpoints.
@@ -15,13 +15,13 @@ namespace SpaceXProxyAPI.Controllers
     [Route("api/[controller]")]
     public class LaunchesController : ControllerBase
     {
-        private readonly LaunchService launchService;
+        private readonly LaunchClient launchService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LaunchesController"/> class.
         /// </summary>
         /// <param name="launchService">Launch Service.</param>
-        public LaunchesController(LaunchService launchService)
+        public LaunchesController(LaunchClient launchService)
         {
             this.launchService = launchService;
         }
@@ -29,11 +29,11 @@ namespace SpaceXProxyAPI.Controllers
         /// <summary>
         /// Gets all past and upcoming launches.
         /// </summary>
+        /// <response code="200">OK.</response>
         /// <returns>A  representing the result of the asynchronous operation.</returns>
         [HttpGet]
-        [Route(nameof(GetAll))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LaunchMetadata>))]
-        public async Task<List<LaunchMetadata>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             return await this.launchService.GetAllLaunches();
         }
@@ -42,10 +42,13 @@ namespace SpaceXProxyAPI.Controllers
         /// Get Launch by id.
         /// </summary>
         /// <param name="id">the Id of the Launch.</param>
+        /// <response code="200">OK.</response>
+        /// <response code="404">Not Found.</response>
         /// <returns>LaunchMetadata.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LaunchDetail))]
-        public async Task<LaunchDetail> GetLaunchById(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetLaunchById(int id)
         {
             return await this.launchService.GetLaunchById(id);
         }
