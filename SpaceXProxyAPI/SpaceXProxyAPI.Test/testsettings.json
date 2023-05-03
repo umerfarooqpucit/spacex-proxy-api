@@ -1,0 +1,5 @@
+{
+  "TestSettings": {
+    "spacexInternalApiBaseUrl": "https://api.spacexdata.com"
+  }
+}
