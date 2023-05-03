@@ -4,7 +4,6 @@
 
 namespace SpaceXProxyAPI.Helpers
 {
-    using System.Text.Json;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
