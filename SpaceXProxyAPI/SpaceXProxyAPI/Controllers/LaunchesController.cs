@@ -15,15 +15,15 @@ namespace SpaceXProxyAPI.Controllers
     [Route("api/[controller]")]
     public class LaunchesController : ControllerBase
     {
-        private readonly LaunchClient launchService;
+        private readonly LaunchClient launchClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LaunchesController"/> class.
         /// </summary>
-        /// <param name="launchService">Launch Service.</param>
-        public LaunchesController(LaunchClient launchService)
+        /// <param name="launchClient">Launch Service.</param>
+        public LaunchesController(LaunchClient launchClient)
         {
-            this.launchService = launchService;
+            this.launchClient = launchClient;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace SpaceXProxyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LaunchMetadata>))]
         public async Task<IActionResult> GetAll()
         {
-            return await this.launchService.GetAllLaunches();
+            return await this.launchClient.GetAllLaunches();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SpaceXProxyAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetLaunchById(int id)
         {
-            return await this.launchService.GetLaunchById(id);
+            return await this.launchClient.GetLaunchById(id);
         }
     }
 }
